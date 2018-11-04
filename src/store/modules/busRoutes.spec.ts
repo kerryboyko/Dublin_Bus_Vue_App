@@ -1,9 +1,9 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import BusRoutes from "@/store/modules/busRoutes";
-import Api from '@/apiInterface';
+import Api from "@/apiInterface";
 
-jest.mock('@/apiInterface');
+jest.mock("@/apiInterface");
 
 Vue.use(Vuex);
 
@@ -12,7 +12,7 @@ const TestVue = new Vue({
     state: {},
     mutations: {},
     actions: {},
-    modules: { BusRoutes: BusRoutes(new Api('http://localhost')) }
+    modules: { BusRoutes: BusRoutes(new Api("http://localhost")) }
   })
 });
 
@@ -151,6 +151,16 @@ describe("/src/store/modules/busRoutes", () => {
       expect(getters.selectedRouteData).toEqual({
         operator: "bac",
         route: "236"
+      });
+    });
+  });
+  describe("clearingAction", () => {
+    it("resets the state", async () => {
+      await dispatch("clearRoutes");
+      expect(state).toEqual({
+        filterText: "",
+        routes: [],
+        selectedRoute: null
       });
     });
   });

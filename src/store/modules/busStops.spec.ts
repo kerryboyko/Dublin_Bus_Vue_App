@@ -150,4 +150,15 @@ describe("/src/store/modules/busStops", () => {
       });
     });
   });
+  describe("clearing action", () => {
+    it('clearStops', async () => {
+      await dispatch('clearStops', () => {
+        expect(state).toEqual({
+          searchText: "",
+          selectedStop: null,
+          stops: []
+        });
+      })
+    })
+  })
 });

@@ -44,4 +44,10 @@ describe("/src/store/modules/busTimetable", () => {
       expect(getters.timetable).toEqual(idealTimetable);
     });
   });
+  describe('clearTimetable', () => {
+    it('clears the timetables', async () => {
+      await dispatch('clearTimetable');
+      expect(state).toEqual({timetable: null});
+    })
+  })
 });

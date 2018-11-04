@@ -5,7 +5,8 @@ import { IVuexTypes, IBusStopsState, IBusStop, IBusLine } from "@/types";
 export const busStopsTypes: IVuexTypes = [
   "LOAD_BUS_STOPS",
   "SELECT_STOP",
-  "SET_STOPS_SEARCH_TEXT"
+  "SET_STOPS_SEARCH_TEXT",
+  "CLEAR_STOPS"
 ].reduce((pv, cv) => ({ ...pv, [cv]: cv }), {});
 
 interface IStopsMap {
@@ -16,7 +17,7 @@ const initialState = {
   stops: [],
   selectedStop: null,
   searchText: ""
-};
+}
 
 const getterMethods: any = {
   stopsMap: ({ stops }: IBusStopsState): IStopsMap =>
@@ -51,6 +52,9 @@ const actions = {
   },
   setStopSearchText: ({ commit }: { commit: Commit }, text: string): void => {
     commit(busStopsTypes.SET_STOPS_SEARCH_TEXT, text);
+  },
+  clearStops: ({commit}: {commit: Commit}) => {
+    commit(busStopsTypes.CLEAR_STOPS);
   }
 };
 
@@ -118,6 +122,11 @@ const mutations = {
     text: string
   ) => {
     state.searchText = text;
+  },
+  [busStopsTypes.CLEAR_STOPS]: (state: IBusStopsState) => {
+    state.stops = [],
+    state.selectedStop = null,
+    state.searchText = ""
   }
 };
 

@@ -1,11 +1,12 @@
 import { Commit } from "vuex";
-import Api from "@/apiInterface"; 
-import { IRoute, IVuexTypes, IBusRoutesState} from "@/types";
+import Api from "@/apiInterface";
+import { IRoute, IVuexTypes, IBusRoutesState } from "@/types";
 
 const busRoutesTypes: IVuexTypes = [
   "LOAD_BUS_ROUTES",
   "SELECT_ROUTE",
-  "FILTER_ROUTES_BY_TEXT"
+  "FILTER_ROUTES_BY_TEXT",
+  "CLEAR_ROUTES"
 ].reduce((pv, cv) => ({ ...pv, [cv]: cv }), {});
 
 const initialState: IBusRoutesState = {
@@ -26,7 +27,7 @@ const getterMethods: any = {
 };
 
 const actions = {
-  loadRoutes: ({ commit }: { commit: Commit }, routes: IRoute[]) => {
+  loadRoutes: ({ commit }: { commit: Commit }, routes: IRoute[]): void => {
     commit(busRoutesTypes.LOAD_BUS_ROUTES, routes);
   },
   selectRoute: ({ commit }: { commit: Commit }, route: string): void => {
@@ -34,6 +35,9 @@ const actions = {
   },
   filterRoutesByText: ({ commit }: { commit: Commit }, text: string): void => {
     commit(busRoutesTypes.FILTER_ROUTES_BY_TEXT, text);
+  },
+  clearRoutes: ({ commit }: { commit: Commit }): void => {
+    commit(busRoutesTypes.CLEAR_ROUTES);
   }
 };
 
@@ -61,8 +65,16 @@ const mutations = {
   [busRoutesTypes.SELECT_ROUTE]: (state: IBusRoutesState, route: string) => {
     state.selectedRoute = route;
   },
-  [busRoutesTypes.FILTER_ROUTES_BY_TEXT]: (state: IBusRoutesState, text: string) => {
+  [busRoutesTypes.FILTER_ROUTES_BY_TEXT]: (
+    state: IBusRoutesState,
+    text: string
+  ) => {
     state.filterText = text;
+  },
+  [busRoutesTypes.CLEAR_ROUTES]: (state: IBusRoutesState) => {
+    state.routes = [];
+    state.filterText = "";
+    state.selectedRoute = null;
   }
 };
 
