@@ -1,11 +1,18 @@
 <template>
   <div class="home">
     <h2>Dublin Bus Routes</h2>
+    <BusRoutes />
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import Vue from "vue";
+import BusRoutes from "./BusRoutes.vue";
 
-export default class Home extends Vue {}
+export default Vue.component('home-page', {
+  components: {
+    BusRoutes
+  }
+})
+
 </script>
