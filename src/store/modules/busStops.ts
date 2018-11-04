@@ -1,14 +1,11 @@
-import { uniqBy } from "lodash";
 import { Commit } from "vuex";
 import Api from "@/apiInterface";
 import { IVuexTypes, IBusStopsState, IBusStop, IBusLine } from "@/types";
 
-const api = new Api();
-
-const busStopsTypes: IVuexTypes = [
+export const busStopsTypes: IVuexTypes = [
   "LOAD_BUS_STOPS",
   "SELECT_STOP",
-  "FILTER_STOP_BY_TEXT"
+  "SET_STOPS_SEARCH_TEXT"
 ].reduce((pv, cv) => ({ ...pv, [cv]: cv }), {});
 
 interface IStopsMap {
@@ -52,8 +49,8 @@ const actions = {
   selectStop: ({ commit }: { commit: Commit }, stop: string): void => {
     commit(busStopsTypes.SELECT_STOP, stop);
   },
-  filterStopsByText: ({ commit }: { commit: Commit }, text: string): void => {
-    commit(busStopsTypes.FILTER_STOP_BY_TEXT, text);
+  setStopSearchText: ({ commit }: { commit: Commit }, text: string): void => {
+    commit(busStopsTypes.SET_STOPS_SEARCH_TEXT, text);
   }
 };
 
@@ -65,20 +62,20 @@ const actions = {
 // as we want only *raw* data from the api interface, and only *formatted*
 // data in the store.  It *could* go into the synchronous actions,
 // but why put extra logic in there?
-const asyncActions = {
+const asyncActions = (api: Api = new Api()) => ({
   loadStopsFromAPI: (
     { dispatch, rootState }: any,
     selectedRoute?: string
   ): Promise<any> =>
     new Promise((resolve, reject) => {
-      // if we pass in a specific route, we get that route,
-      // if we leave it undefined, it will look up the root state.
-      if (!selectedRoute && rootState.BusRoutes.selectedRoute) {
-        return dispatch("loadStopsFromAPI", rootState.busRoutes.selectedRoute);
-      } else if (!selectedRoute) {
-        reject("No route has been selected");
-        return null;
+      if (!selectedRoute) {
+        selectedRoute = rootState.BusRoutes.selectedRoute;
+        if (!selectedRoute) {
+          reject("No route has been selected");
+          return null;
+        }
       }
+
       api
         .getBusStops(selectedRoute)
         .then((lines: IBusLine[]) => {
@@ -90,7 +87,7 @@ const asyncActions = {
         .then(
           (allStops: IBusStop[]): IBusStop[] =>
             Object.values(
-              allStops.reduce((pv: any, cv:IBusStop) => {
+              allStops.reduce((pv: any, cv: IBusStop) => {
                 pv[cv.stopid] = cv;
                 return pv;
               }, {})
@@ -104,7 +101,7 @@ const asyncActions = {
           reject(err);
         });
     })
-};
+});
 
 const mutations = {
   [busStopsTypes.LOAD_BUS_STOPS]: (
@@ -116,7 +113,7 @@ const mutations = {
   [busStopsTypes.SELECT_STOP]: (state: IBusStopsState, stop: string) => {
     state.selectedStop = stop;
   },
-  [busStopsTypes.FILTER_STOPS_BY_TEXT]: (
+  [busStopsTypes.SET_STOPS_SEARCH_TEXT]: (
     state: IBusStopsState,
     text: string
   ) => {
@@ -124,9 +121,9 @@ const mutations = {
   }
 };
 
-export default {
+export default (api: Api) => ({
   state: initialState,
   mutations,
-  actions: { ...actions, ...asyncActions },
+  actions: { ...actions, ...asyncActions(api) },
   getters: getterMethods
-};
+});

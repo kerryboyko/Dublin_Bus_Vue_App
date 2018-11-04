@@ -1,5 +1,6 @@
 import request from "superagent";
 import { IRoute } from "@/types";
+import { resolve } from "dns";
 
 interface IRouteResponse {
   errorcode: string | number;
@@ -13,42 +14,64 @@ export const API_URL = `https://data.smartdublin.ie/cgi-bin/rtpi`;
 export default class Api {
   constructor(private apiUrl: string = API_URL) {}
   public getBusRoutes = (): Promise<IRoute[]> =>
-    new Promise((resolve, reject) => {
+    new Promise((resolveBusRoutes, rejectBusRoutes) => {
       request
         .get(`${this.apiUrl}/routelistinformation?operator=bac`)
         .then((data: any) => {
           const { body }: { body: IRouteResponse } = data;
           if (body.errorcode !== "0") {
-            reject(body.errormessage);
+            rejectBusRoutes(body.errormessage);
             return;
           }
-          resolve(body.results);
+          resolveBusRoutes(body.results);
         })
         .catch((miscError: any) => {
           console.error(miscError);
-          reject(miscError);
+          rejectBusRoutes(miscError);
         });
     });
   public getBusStops = (routeNumber: string): Promise<any> =>
-    new Promise((resolve, reject) => {
+    new Promise((resolveBusStops, rejectBusStops) => {
       request
         .get(
-          `${this.apiUrl}routeinformation?routeid=${routeNumber}&operator=bac`
+          `${this.apiUrl}/routeinformation?routeid=${routeNumber}&operator=bac`
         )
         .then(({ body }: any) => {
-          if(body.errorcode !== "0"){
-            console.log(JSON.stringify({body}))
-            reject(body.errormessage);
+          if (body.errorcode !== "0") {
+            console.log(JSON.stringify({ body }));
+            rejectBusStops(body.errormessage);
             return;
           }
-          if(body.results.length === 0){
+          if (body.results.length === 0) {
             console.log("No Results");
           }
-          resolve(body.results);
+          resolveBusStops(body.results);
         })
         .catch((miscError: any) => {
           console.error(miscError);
-          reject(miscError);
+          rejectBusStops(miscError);
+        });
+    });
+  public getTimetable = (route: string, stop: string) =>
+    new Promise((resolveTimetable, rejectTimetable) => {
+      request
+        .get(
+          `$[this.apiURL}/realtimebusinformation?stopid=${stop}&routeid=${route}&operator=bac`
+        )
+        .then(({ body }: any) => {
+          if (body.errorcode !== 0) {
+            console.log(JSON.stringify({ body }));
+            rejectTimetable(body.errormessage);
+            return;
+          }
+          if (body.results.length === 0) {
+            console.log("No Results");
+          }
+          resolveTimetable(body.results);
+        })
+        .catch((miscError: any) => {
+          console.error(miscError);
+          rejectTimetable(miscError);
         });
     });
 }

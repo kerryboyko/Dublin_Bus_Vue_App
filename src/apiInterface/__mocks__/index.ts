@@ -5,9 +5,7 @@ import { IRoute } from "@/types";
 export const API_URL = `https://data.smartdublin.ie/cgi-bin/rtpi`;
 
 export default class Api {
-  constructor(private apiUrl: string = API_URL) {
-    console.log("mock is running");
-  }
+  constructor(private apiUrl: string = API_URL) {}
   public getBusRoutes = (): Promise<IRoute[]> =>
     new Promise(resolve => {
       setTimeout(() => {
@@ -20,7 +18,7 @@ export default class Api {
       }, 1000);
     });
   public getBusStops = (routeNumber: string): Promise<any> =>
-    new Promise((resolve) => {
+    new Promise(resolve => {
       setTimeout(() => {
         const data: any[] = [null, null, null, null, null];
         for (let i = 0; i < 5; i++) {

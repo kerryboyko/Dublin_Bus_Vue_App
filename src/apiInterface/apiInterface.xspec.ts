@@ -1,7 +1,9 @@
-// this is really more of a test of the backend than the frontend. 
-// as a reasult, there's no real reason to mock the api.  This is, effectively, the API. 
+/* This tests the API interface against the real API
+   for most purposes, this is disabled */
+
 import Api, { API_URL } from "@/apiInterface";
 import { IRoute } from "@/types";
+
 
 const api = new Api(API_URL);
 
@@ -36,8 +38,9 @@ describe("/src/apiInterface", () => {
       "will get the bus stops for route 25",
       done =>
         api
-          .getBusStops("66")
+          .getBusStops("25")
           .then(lines => {
+
             expect(true).toBe(true);
             lines.forEach((line: any) => {
               expect(Object.keys(line).sort()).toEqual(
@@ -51,6 +54,7 @@ describe("/src/apiInterface", () => {
                   "stops"
                 ].sort()
               );
+              console.log("routes", JSON.stringify(line.stops.map((s:any) => s.stopid)));
               line.stops.forEach((stop: any) => {
                 expect(Object.keys(stop).sort()).toEqual(
                   [
@@ -76,5 +80,10 @@ describe("/src/apiInterface", () => {
           }),
       30000
     );
+  });
+  describe("getTimeTable()", async () => {
+    it("gets the timetable", () => {
+      api.getTimetable("25", "200");
+    });
   });
 });

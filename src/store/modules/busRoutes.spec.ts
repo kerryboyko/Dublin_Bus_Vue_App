@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import BusRoutes from "@/store/modules/busRoutes";
+import Api from '@/apiInterface';
 
 jest.mock('@/apiInterface');
 
@@ -11,7 +12,7 @@ const TestVue = new Vue({
     state: {},
     mutations: {},
     actions: {},
-    modules: { BusRoutes }
+    modules: { BusRoutes: BusRoutes(new Api('http://localhost')) }
   })
 });
 

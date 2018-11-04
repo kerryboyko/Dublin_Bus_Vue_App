@@ -1,9 +1,6 @@
 import { Commit } from "vuex";
-import Api from "@/apiInterface";
+import Api from "@/apiInterface"; 
 import { IRoute, IVuexTypes, IBusRoutesState} from "@/types";
-
-
-const api = new Api();
 
 const busRoutesTypes: IVuexTypes = [
   "LOAD_BUS_ROUTES",
@@ -44,7 +41,7 @@ const actions = {
 // a dispatch() call which will result in a promise.
 // This is particularly important in testing so that we can
 // manipulate the state or bypass calling the api alltogether.
-const asyncActions = {
+const asyncActions = (api: Api = new Api()) => ({
   loadRoutesFromAPI: ({ dispatch }: any): Promise<any> =>
     api
       .getBusRoutes()
@@ -52,7 +49,7 @@ const asyncActions = {
       .catch((err: Error) => {
         console.error(err);
       })
-};
+});
 
 const mutations = {
   [busRoutesTypes.LOAD_BUS_ROUTES]: (
@@ -69,9 +66,9 @@ const mutations = {
   }
 };
 
-export default {
-  state: initialState,
+export default (api: Api) => ({
+  state: initialState as any,
   mutations,
-  actions: { ...actions, ...asyncActions },
+  actions: { ...actions, ...asyncActions(api) },
   getters: getterMethods
-};
+});
