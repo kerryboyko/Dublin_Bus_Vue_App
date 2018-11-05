@@ -10,7 +10,7 @@
         <pre>{{filterText}}</pre>
         <button @click="loadRoutesFromAPI">Load Routes from API</button>
         <ul v-for="route in filteredRoutes" :key="route.route">
-          <li><a href="#">{{route.route}}</a></li>
+          <li><router-link :to="`/route/${route.route}`">{{route.route}}</router-link></li>
         </ul>
       </div>
   </div>

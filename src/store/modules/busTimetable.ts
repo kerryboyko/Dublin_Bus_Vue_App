@@ -27,7 +27,7 @@ const actions = {
 };
 
 const asyncActions = (api: Api) => ({
-  loadTimetableFromApi: (
+  loadTimetableFromAPI: (
     { dispatch, rootState }: any,
     {selectedRoute, selectedStop}: { selectedRoute?: string; selectedStop?: string }
   ) =>

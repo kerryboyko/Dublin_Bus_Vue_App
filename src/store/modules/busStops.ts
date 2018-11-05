@@ -20,6 +20,8 @@ const initialState = {
 }
 
 const getterMethods: any = {
+  allStopsForRoute: ({stops}: IBusStopsState): IBusStop[] => stops,
+  selectedStop: ({selectedStop}: IBusStopsState): string | null => selectedStop,
   stopsMap: ({ stops }: IBusStopsState): IStopsMap =>
     stops.reduce(
       (pv: IStopsMap, stop: IBusStop) => ({ ...pv, [stop.stopid]: stop }),

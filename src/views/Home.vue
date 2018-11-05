@@ -2,6 +2,7 @@
   <div class="home">
     <h2>Dublin Bus Routes</h2>
     <BusRoutes />
+    <router-view></router-view>
   </div>
 </template>
 

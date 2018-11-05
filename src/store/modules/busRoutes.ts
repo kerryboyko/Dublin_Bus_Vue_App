@@ -16,6 +16,7 @@ const initialState: IBusRoutesState = {
 };
 
 const getterMethods: any = {
+  selectedRoute: ({selectedRoute}: IBusRoutesState): string | null => selectedRoute,
   routes: ({ routes }: IBusRoutesState): IRoute[] => routes,
   filterText: ({ filterText }: IBusRoutesState): string => filterText,
   routesMap: ({ routes }: IBusRoutesState): { [key: string]: IRoute } =>
