@@ -11,6 +11,7 @@
     "tslint-check": "tslint-config-prettier-check ./tslint.json"
   },
   "dependencies": {
+    "bootstrap-vue": "^2.0.0-rc.11",
     "lodash": "^4.17.11",
     "superagent": "^4.0.0-beta.5",
     "vue": "^2.5.17",

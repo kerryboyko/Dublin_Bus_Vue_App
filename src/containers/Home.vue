@@ -1,8 +1,9 @@
 <template>
-  <div class="home">
-    <h2>Dublin Bus Routes</h2>
-    <BusRoutes />
-    <router-view></router-view>
+  <div class="home pure-g">
+    <div class="pure-u-1-4">
+      <BusRoutes />
+    </div>
+      <router-view class="pure-u-3-4"></router-view>
   </div>
 </template>
 

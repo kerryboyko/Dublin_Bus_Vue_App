@@ -1,11 +1,14 @@
 <template>
-  <div class="about">
-    <h1>This is an about page for stop {{stopIdFromUrl}}</h1>
-    <p>The stop data {{status}}</p>
-    <pre>{{JSON.stringify(selectedStopData, null, 2)}}</pre>
-    <div v-for="time in timetable" :key="JSON.stringify(time)">
-      <hr/>
-      <pre>{{JSON.stringify(time, null, 2)}}</pre>
+  <div class="stop-page">
+    <div class="stop-page__header">
+      Timetable for stop #{{selectedStop}}
+    </div>
+    <loading-spinner class="loader" v-if="status === 'LOADING'"/>
+    <div v-if="status === 'NOT_FOUND'">No data found for route #{{selectedRoute}}</div>
+    <div v-else class="stop-page__list" v-for="time in timetable" :key="time.arrivaldatetime">
+      <div>Bus for route {{selectedRoute}} {{time.direction}}</div>
+      <div>Heading from {{time.origin}} to {{time.destination}}</div>
+      <div>Arrives: {{time.duetime}} minutes from now at {{time.arrivaldatetime}}</div>
     </div>
   </div>
 </template>
@@ -16,10 +19,10 @@ import { Route } from "vue-router";
 import { mapGetters, mapActions } from "vuex";
 
 const dataStatus = {
-  notLoaded: "has not been loaded",
-  isLoading: "is loading",
-  isLoaded: "is loaded",
-  notFound: "cannot be found"
+  notLoaded: "NOT_LOADED",
+  isLoading: "LOADING",
+  isLoaded: "LOADED",
+  notFound: "NOT_FOUND"
 };
 
 export default Vue.component("route-page", {
@@ -53,25 +56,16 @@ export default Vue.component("route-page", {
     ...mapGetters([
       "selectedRoute",
       "selectedStop",
-      "selectedStopData",
       "timetable"
     ])
   },
   methods: {
     ...mapActions([
-      "loadRoutesFromAPI",
-      "loadStopsFromAPI",
       "loadTimetableFromAPI",
-      "selectRoute",
-      "selectStop"
     ]),
     async checkForChanges() {
       this.status = dataStatus.isLoading;
       await Promise.all([
-        !this.selectedRouteData ? this.loadRoutesFromAPI() : null,
-        !this.selectedStopData
-          ? this.loadStopsFromAPI(this.routeFromUrl)
-          : null,
         !this.timetable || this.stopIdFromUrl !== this.selectedStop
           ? this.loadTimetableFromAPI({
               selectedRoute: this.routeFromUrl,
@@ -81,10 +75,23 @@ export default Vue.component("route-page", {
       ]);
 
       this.status =
-        this.selectedRouteData && this.allStopsForRoute.length
+        this.timetable && this.timetable.length
           ? dataStatus.isLoaded
           : dataStatus.notFound;
     }
   }
 });
 </script>
+
+
+<style lang="sass">
+  .stop-page
+    background: linear-gradient(to right, #f0f9ff 0%,#cbebff 47%,#a1dbff 100%) //http://colorzilla.com/gradient-editor/#f0f9ff+0,cbebff+47,a1dbff+100;Blue+3D+%2313 
+    &__header
+      padding: 15px
+      font-size: 25px
+    &__filter
+      padding: 15px
+    &__list
+      padding: 15px
+</style>

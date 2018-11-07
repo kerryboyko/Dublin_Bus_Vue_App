@@ -1,7 +1,7 @@
 import { Commit } from "vuex";
 import Api from "@/apiInterface";
 import { IVuexTypes, IBusStopsState, IBusStop, IBusLine } from "@/types";
-
+import emergencyStops from '@/store/emergencystops';
 export const busStopsTypes: IVuexTypes = [
   "LOAD_BUS_STOPS",
   "SELECT_STOP",
@@ -20,6 +20,7 @@ const initialState = {
 }
 
 const getterMethods: any = {
+  stopSearchText: ({searchText}: IBusStopsState): string => searchText,
   allStopsForRoute: ({stops}: IBusStopsState): IBusStop[] => stops,
   selectedStop: ({selectedStop}: IBusStopsState): string | null => selectedStop,
   stopsMap: ({ stops }: IBusStopsState): IStopsMap =>
@@ -37,7 +38,7 @@ const getterMethods: any = {
           stop.shortnamelocalized,
           stop.fullname,
           stop.fullnamelocalized
-        ].some(property => property.includes(searchText))
+        ].some(property => property.toLowerCase().includes(searchText.toLowerCase()))
     ),
   selectedStopData: (
     { selectedStop }: IBusStopsState,
@@ -57,6 +58,9 @@ const actions = {
   },
   clearStops: ({commit}: {commit: Commit}) => {
     commit(busStopsTypes.CLEAR_STOPS);
+  }, 
+  loadEmergencyStops: ({dispatch}: any) => {
+    dispatch('loadStops', emergencyStops);
   }
 };
 

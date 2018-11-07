@@ -35,8 +35,8 @@ describe("/src/store/modules/busTimetable", () => {
     });
   });
   describe("asyncActions()", () => {
-    it("loadsTimetableFromApi", async () => {
-      await dispatch("loadTimetableFromApi", {
+    it("loadsTimetableFromAPI", async () => {
+      await dispatch("loadTimetableFromAPI", {
         selectedRoute: "25",
         selectedStop: "26"
       });
