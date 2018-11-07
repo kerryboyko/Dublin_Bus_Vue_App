@@ -1,7 +1,6 @@
 import { Commit } from "vuex";
 import Api from "@/apiInterface";
 import { IVuexTypes, IBusStopsState, IBusStop, IBusLine } from "@/types";
-import emergencyStops from '@/store/emergencystops';
 export const busStopsTypes: IVuexTypes = [
   "LOAD_BUS_STOPS",
   "SELECT_STOP",
@@ -17,12 +16,13 @@ const initialState = {
   stops: [],
   selectedStop: null,
   searchText: ""
-}
+};
 
 const getterMethods: any = {
-  stopSearchText: ({searchText}: IBusStopsState): string => searchText,
-  allStopsForRoute: ({stops}: IBusStopsState): IBusStop[] => stops,
-  selectedStop: ({selectedStop}: IBusStopsState): string | null => selectedStop,
+  stopSearchText: ({ searchText }: IBusStopsState): string => searchText,
+  allStopsForRoute: ({ stops }: IBusStopsState): IBusStop[] => stops,
+  selectedStop: ({ selectedStop }: IBusStopsState): string | null =>
+    selectedStop,
   stopsMap: ({ stops }: IBusStopsState): IStopsMap =>
     stops.reduce(
       (pv: IStopsMap, stop: IBusStop) => ({ ...pv, [stop.stopid]: stop }),
@@ -38,7 +38,9 @@ const getterMethods: any = {
           stop.shortnamelocalized,
           stop.fullname,
           stop.fullnamelocalized
-        ].some(property => property.toLowerCase().includes(searchText.toLowerCase()))
+        ].some(property =>
+          property.toLowerCase().includes(searchText.toLowerCase())
+        )
     ),
   selectedStopData: (
     { selectedStop }: IBusStopsState,
@@ -56,11 +58,8 @@ const actions = {
   setStopSearchText: ({ commit }: { commit: Commit }, text: string): void => {
     commit(busStopsTypes.SET_STOPS_SEARCH_TEXT, text);
   },
-  clearStops: ({commit}: {commit: Commit}) => {
+  clearStops: ({ commit }: { commit: Commit }) => {
     commit(busStopsTypes.CLEAR_STOPS);
-  }, 
-  loadEmergencyStops: ({dispatch}: any) => {
-    dispatch('loadStops', emergencyStops);
   }
 };
 
@@ -130,9 +129,7 @@ const mutations = {
     state.searchText = text;
   },
   [busStopsTypes.CLEAR_STOPS]: (state: IBusStopsState) => {
-    state.stops = [],
-    state.selectedStop = null,
-    state.searchText = ""
+    (state.stops = []), (state.selectedStop = null), (state.searchText = "");
   }
 };
 

@@ -11,10 +11,9 @@
 import Vue from "vue";
 import BusRoutes from "./BusRoutes.vue";
 
-export default Vue.component('home-page', {
+export default Vue.component("home-page", {
   components: {
     BusRoutes
   }
-})
-
+});
 </script>

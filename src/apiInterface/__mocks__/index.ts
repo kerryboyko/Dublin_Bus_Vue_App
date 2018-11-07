@@ -1,5 +1,5 @@
 import { IRoute } from "@/types";
-import { resolve } from 'path';
+import { resolve } from "path";
 
 // __mocks__/request.js
 
@@ -49,11 +49,11 @@ export default class Api {
         getBusStopsResolve(data);
       }, 2000);
     });
-    public getTimetable = (route: string, stop: string): Promise<any> => new Promise((getTimetableResolve) => {
+  public getTimetable = (route: string, stop: string): Promise<any> =>
+    new Promise(getTimetableResolve => {
       setTimeout(() => {
         const data = ["11:00", "12:00", "13:00"];
         getTimetableResolve(data);
-      }, 3000)
-
-    })
+      }, 3000);
+    });
 }

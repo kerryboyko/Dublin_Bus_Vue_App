@@ -4,7 +4,6 @@
 import Api, { API_URL } from "@/apiInterface";
 import { IRoute } from "@/types";
 
-
 const api = new Api(API_URL);
 
 describe("/src/apiInterface", () => {
@@ -40,7 +39,6 @@ describe("/src/apiInterface", () => {
         api
           .getBusStops("25")
           .then(lines => {
-
             expect(true).toBe(true);
             lines.forEach((line: any) => {
               expect(Object.keys(line).sort()).toEqual(
@@ -54,7 +52,10 @@ describe("/src/apiInterface", () => {
                   "stops"
                 ].sort()
               );
-              console.log("routes", JSON.stringify(line.stops.map((s:any) => s.stopid)));
+              console.log(
+                "routes",
+                JSON.stringify(line.stops.map((s: any) => s.stopid))
+              );
               line.stops.forEach((stop: any) => {
                 expect(Object.keys(stop).sort()).toEqual(
                   [

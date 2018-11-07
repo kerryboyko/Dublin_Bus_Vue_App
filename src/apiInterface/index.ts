@@ -56,11 +56,13 @@ export default class Api {
     new Promise((resolveTimetable, rejectTimetable) => {
       request
         .get(
-          `${this.apiUrl}/realtimebusinformation?stopid=${stop}&routeid=${route}&operator=bac`
+          `${
+            this.apiUrl
+          }/realtimebusinformation?stopid=${stop}&routeid=${route}&operator=bac`
         )
         .then((results: any) => {
           console.log(results);
-          const {body} = results;
+          const { body } = results;
           if (body.errorcode !== "0") {
             console.log(JSON.stringify({ body }));
             rejectTimetable(body.errormessage);

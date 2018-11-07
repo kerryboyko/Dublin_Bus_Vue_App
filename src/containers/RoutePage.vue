@@ -26,8 +26,8 @@
 import Vue from "vue";
 import { Route } from "vue-router";
 import { mapGetters, mapActions } from "vuex";
-import Spinner from '@/components/Spinner.vue';
-import StopSelector from '@/components/StopSelector.vue';
+import Spinner from "@/components/Spinner.vue";
+import StopSelector from "@/components/StopSelector.vue";
 
 const dataStatus = {
   notLoaded: "NOT_LOADED",
@@ -54,7 +54,6 @@ export default Vue.component("route-page", {
     await this.checkForChanges();
   },
   async beforeRouteUpdate(to, from, next) {
-    console.log({to, from, next})
     if (to.params.routeFromUrl !== this.selectedRoute) {
       await this.clearStops();
       await this.selectRoute(this.routeFromUrl);
@@ -64,8 +63,8 @@ export default Vue.component("route-page", {
   },
   computed: {
     ...mapGetters([
-      'stopSearchText',
-      'filteredStops',
+      "stopSearchText",
+      "filteredStops",
       "selectedRouteData",
       "selectedRouteData",
       "selectedRoute",
@@ -73,11 +72,18 @@ export default Vue.component("route-page", {
     ])
   },
   methods: {
-    ...mapActions(['setStopSearchText', "loadStopsFromAPI", "selectRoute", 'clearStops']),
+    ...mapActions([
+      "setStopSearchText",
+      "loadStopsFromAPI",
+      "selectRoute",
+      "clearStops"
+    ]),
     async checkForChanges() {
       this.status = dataStatus.isLoading;
       await Promise.all([
-        !this.allStopsForRoute.length ? this.loadStopsFromAPI(this.selectedRoute) : null
+        !this.allStopsForRoute.length
+          ? this.loadStopsFromAPI(this.selectedRoute)
+          : null
       ]);
 
       this.status =
@@ -88,11 +94,11 @@ export default Vue.component("route-page", {
     handleSearch(event: any) {
       const { value } = event.target;
       this.setStopSearchText(value);
-    },
-  }, 
+    }
+  },
   components: {
-    'loading-spinner': Spinner,
-    'stop-selector': StopSelector,
+    "loading-spinner": Spinner,
+    "stop-selector": StopSelector
   }
 });
 </script>

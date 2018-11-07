@@ -17,6 +17,7 @@
 import Vue from "vue";
 import { Route } from "vue-router";
 import { mapGetters, mapActions } from "vuex";
+import LoadingSpinner from "@/components/Spinner.vue";
 
 const dataStatus = {
   notLoaded: "NOT_LOADED",
@@ -42,26 +43,30 @@ export default Vue.component("route-page", {
     }
   },
   async created() {
+    await this.clearTimetable();
     await this.selectStop(this.stopIdFromUrl);
     await this.checkForChanges();
   },
   async beforeRouteUpdate(to, from, next) {
-    if (to.params.stopIdFromUrl !== this.selectedStop) {
+    if (
+      to.params.stopIdFromUrl !== this.selectedStop ||
+      to.params.routeFromUrl !== this.selectedRoute
+    ) {
+      await this.clearTimetable();
       await this.selectRoute(this.stopIdFromUrl);
       await this.checkForChanges();
     }
     next();
   },
   computed: {
-    ...mapGetters([
-      "selectedRoute",
-      "selectedStop",
-      "timetable"
-    ])
+    ...mapGetters(["selectedRoute", "selectedStop", "timetable"])
   },
   methods: {
     ...mapActions([
       "loadTimetableFromAPI",
+      "selectStop",
+      "clearTimetable",
+      "selectRoute"
     ]),
     async checkForChanges() {
       this.status = dataStatus.isLoading;
@@ -79,6 +84,9 @@ export default Vue.component("route-page", {
           ? dataStatus.isLoaded
           : dataStatus.notFound;
     }
+  },
+  components: {
+    "loading-spinner": LoadingSpinner
   }
 });
 </script>

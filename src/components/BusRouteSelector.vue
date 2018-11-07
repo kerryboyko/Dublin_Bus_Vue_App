@@ -10,7 +10,7 @@
 import Vue from "vue";
 
 export default Vue.component("bus-route", {
-  props: ['route']
+  props: ["route"]
 });
 </script>
 
